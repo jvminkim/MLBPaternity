@@ -17,6 +17,21 @@ import xlsxwriter
 import datetime
 import tweepy
 import json
+import socket
+
+#Twitter configuration
+API_KEY = 'ENTER API KEY HERE'
+API_SECRET = 'ENTER API SECRET HERE'
+ACCESS_KEY = 'ENTER ACCESS KEY HERE'
+ACCESS_SECRET = 'ENTER ACCESS_SECRET HERE'
+import json
+import tweepy
+import requests
+import config
+
+auth = tweepy.OAuthHandler(API_KEY, API_SECRET)
+auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
+api = tweepy.API(auth)
 
 #Getting Dates
 TodayDate = datetime.datetime.now()
@@ -31,11 +46,10 @@ options = webdriver.ChromeOptions()
 options.add_experimental_option('excludeSwitches', ['enable-logging'])
 driver = webdriver.Chrome(executable_path = PATH, options=options)
 
-
 #Getting current day
-#driver = webdriver.Chrome(executable_path = PATH)
-#driver.get(r"https://www.mlb.com/transactions/" + year + "/" + month + "/" + day)
-driver.get(r"https://www.mlb.com/transactions/" + "2022/10/06" )
+driver = webdriver.Chrome(executable_path = PATH)
+driver.get(r"https://www.mlb.com/transactions/" + year + "/" + month + "/" + day)
+
 search_paternity = "activated"
 search_pat = "from the paternity list"
 players_dct = {}
@@ -55,9 +69,6 @@ def find_name(page):
     team_detail = driver.find_elements(By.CLASS_NAME, "club-link")
     batter_index = 0
     for i in range(len(batter_name)):
-        #added a case where there isnt a link to a player on a page
-        #rint(batter_name[25].text)
-        #print(transaction_detail[25].text)
         if batter_name[batter_index].text not in transaction_detail[i].text:
             batter_index = batter_index - 1
         if search_pat in transaction_detail[i].text and search_paternity in transaction_detail[i].text:
@@ -77,32 +88,8 @@ get_players_activated(driver.page_source)
 driver.close()
 def tweet_players():
     for key in players_dct:
-        print(str(key) + " has been activated from the paternity list today for the " + str(players_dct[key]) + " today.")
-print(players_dct)
+        api.update_status(str(key) + " has been activated from the paternity list today for the " + str(players_dct[key]) + " today.")
+
+tweet_players()
 
 
-
-API_KEY = 'VIYgsSQwRnGTTwuyfR1bmBxaZ'
-API_SECRET = '7rQwb0e9RBGAN2eLJRmsfPES8IEFsME285sWWO4V83tHr3F13j'
-ACCESS_KEY = '1586352690434641922-BaEnVQL1RD9WGKCypelBWq5LWc3aK5'
-ACCESS_SECRET = 'rcidIH2LPx4yO94nwtNFiNU6cHHH9YGnDIwymouaPAYnT'
-import json
-import tweepy
-import requests
-import config
-
-client = tweepy.Client(consumer_key = API_KEY,
-                       consumer_secret= API_SECRET,
-                       access_token = ACCESS_KEY,
-                       access_token_secret= ACCESS_SECRET)
-
-response = client.create_tweet(text='Hello World!')
-
-auth = tweepy.OAuthHandler(API_KEY, API_SECRET)
-auth.set_access_token(ACCESS_KEY, ACCESS_SECRET)
-api = tweepy.API(auth)
-#x = '{"Vimael Machin"}'
-
-#y = json.dumps(x)
-#tweepy.Client.create_tweet(x.json())
-api.update_status("test tweet")
