@@ -7,3 +7,5 @@ If you're running the webscraper, you might run into issues where the website ju
 
 The twitter_code has code on how my account will scrape the transactions list daily and tweet out who's activated from the paternity list! Please follow my twitter @MLBFathers.
 
+Here's the article I wrote in accordance with this project!
+https://medium.com/university-of-illinois-at-urbana-champaign/investigating-dad-strength-in-sports-a2e21e0296ec
